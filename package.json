@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-bundlesocial",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"description": "n8n node for bundle.social: schedule posts, manage uploads, comments, DMs, automations and analytics across 15 social networks. Unlimited social accounts.",
 	"license": "MIT",
 	"homepage": "https://bundle.social",
