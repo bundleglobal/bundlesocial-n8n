@@ -2,7 +2,7 @@ name: release
 
 on:
   workflow_run:
-    workflows: ["tests"]
+    workflows: ['tests']
     types: [completed]
     branches: [main]
 
@@ -33,8 +33,6 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Only for the first publish: trusted publishing can be set up once the package exists on npm.
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
 
   skip-release:
