@@ -43,6 +43,7 @@
 		"dist"
 	],
 	"publishConfig": {
+		"access": "public",
 		"provenance": true
 	},
 	"n8n": {
