@@ -1,0 +1,31 @@
+{
+	"node": "n8n-nodes-bundlesocial.bundleSocial",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Marketing & Content", "Communication"],
+	"alias": [
+		"social media",
+		"schedule post",
+		"instagram",
+		"tiktok",
+		"youtube",
+		"linkedin",
+		"facebook",
+		"twitter",
+		"threads",
+		"pinterest",
+		"bluesky"
+	],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/bundleglobal/n8n-nodes-bundlesocial?tab=readme-ov-file#credentials"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://info.bundle.social/api-reference/introduction"
+			}
+		]
+	}
+}
