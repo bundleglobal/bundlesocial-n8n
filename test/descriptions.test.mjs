@@ -1,7 +1,7 @@
 // Checks the generated descriptions against the n8n lint rules that verification enforces,
 // so a generator change cannot silently produce something `npm run lint:fix` would rewrite.
 import assert from 'node:assert/strict';
-import { it } from 'node:test';
+import { it } from 'vitest';
 import { operationSpecs } from '../dist/nodes/BundleSocial/generated/index.js';
 import { properties } from './helpers.mjs';
 

@@ -16,27 +16,35 @@
 		"linkedin"
 	],
 	"author": {
-		"name": "bundle.social",
+		"name": "bundle.global",
 		"email": "marcel@bundle.global"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/bundleglobal/n8n-nodes-bundlesocial.git"
+		"url": "git+https://github.com/bundleglobal/bundlesocial-n8n.git"
+	},
+	"bugs": {
+		"url": "https://github.com/bundleglobal/bundlesocial-n8n/issues"
 	},
 	"scripts": {
+		"fetch-openapi": "curl -fsSL https://api.bundle.social/swagger-json -o openapi/bundlesocial.openapi.json",
 		"generate": "node scripts/generate.mjs",
 		"build": "n8n-node build",
 		"build:watch": "tsc --watch",
 		"dev": "n8n-node dev",
+		"typecheck": "tsc --noEmit",
 		"lint": "n8n-node lint",
 		"lint:fix": "n8n-node lint --fix",
-		"test": "npm run build && node --test test/*.test.mjs",
-		"release": "n8n-node release",
-		"prepublishOnly": "n8n-node prerelease"
+		"test": "npm run build && vitest run",
+		"test:watch": "vitest",
+		"prepublishOnly": "npm run lint && npm run build"
 	},
 	"files": [
 		"dist"
 	],
+	"publishConfig": {
+		"provenance": true
+	},
 	"n8n": {
 		"n8nNodesApiVersion": 1,
 		"strict": true,
@@ -49,10 +57,13 @@
 	},
 	"devDependencies": {
 		"@n8n/node-cli": "^0.53.2",
+		"@semantic-release/changelog": "^6.0.3",
+		"@semantic-release/git": "^10.0.1",
 		"eslint": "9.39.4",
 		"prettier": "3.8.3",
-		"release-it": "20.2.0",
-		"typescript": "5.9.3"
+		"semantic-release": "^25.0.2",
+		"typescript": "5.9.3",
+		"vitest": "^2.0.5"
 	},
 	"peerDependencies": {
 		"n8n-workflow": "*"
