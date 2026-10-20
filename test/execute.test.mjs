@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
-import { describe, it } from 'node:test';
+import { describe, it } from 'vitest';
 import { binaryFile, isVisible, properties, requiredValues, run } from './helpers.mjs';
 
 // The CommonJS build is the one dist/ loads; n8n-workflow's ESM build does not run on plain Node.

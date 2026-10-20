@@ -481,7 +481,7 @@ The resource and operation descriptions in `nodes/BundleSocial/generated/` are g
 
 ```bash
 # Refresh the spec and regenerate
-curl -sS https://api.bundle.social/swagger-json -o openapi/bundlesocial.openapi.json
+npm run fetch-openapi
 npm run generate
 
 npm install
@@ -491,6 +491,8 @@ npm run dev   # starts a local n8n with the node loaded
 ```
 
 `scripts/generate.mjs` holds the naming overrides (operation names, resource grouping, description fixes) on top of the spec. Fix problems in the generator, never in the generated files: CI regenerates and fails when the output differs.
+
+Every day the `generate` workflow fetches the spec, regenerates the node and opens a pull request when it changed. Releases are made by semantic-release from the commit messages on `main` (`feat:` for a minor version, `fix:` for a patch) and published to npm with provenance.
 
 The tests in `test/` run the built node against a mocked n8n context. They check the generated parameters against the n8n lint rules used for verification and assert the requests each operation sends.
 
