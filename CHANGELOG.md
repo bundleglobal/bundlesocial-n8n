@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/bundleglobal/bundlesocial-n8n/compare/v1.0.0...v1.0.1) (2026-10-20)
+
+
+### Bug Fixes
+
+* publish through trusted publishing and leave the TypeScript build info out of the package ([a96286d](https://github.com/bundleglobal/bundlesocial-n8n/commit/a96286d5bfe327e881b16b426188320718ef5058))
+
 # 1.0.0 (2026-10-20)
 
 
