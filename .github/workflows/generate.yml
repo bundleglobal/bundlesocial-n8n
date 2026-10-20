@@ -26,16 +26,14 @@ jobs:
         run: npm run fetch-openapi
       - name: Generate node
         run: npm run generate
-      - name: Set output variables
-        id: vars
-        run: echo "date=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "feat: regenerate from the bundle.social API ${{ steps.vars.outputs.date }}"
-          title: "feat: regenerate from the bundle.social API ${{ steps.vars.outputs.date }}"
-          body: Generated from https://api.bundle.social/swagger-json on ${{ steps.vars.outputs.date }}.
+          # One PR is kept up to date on the same branch, so the title carries no date.
+          commit-message: "feat: regenerate from the bundle.social API"
+          title: "feat: regenerate from the bundle.social API"
+          body: Regenerated from https://api.bundle.social/swagger-json.
           branch: generate-node
           base: main
           labels: generate-node
