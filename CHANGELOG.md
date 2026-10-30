@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/bundleglobal/bundlesocial-n8n/compare/v1.0.1...v1.0.2) (2026-10-30)
+
+
+### Bug Fixes
+
+* keep action names readable when the platform name is dropped ([24bde9c](https://github.com/bundleglobal/bundlesocial-n8n/commit/24bde9cb770b1952fb59daeadc8fdcdaf6d5a25d))
+
 ## [1.0.1](https://github.com/bundleglobal/bundlesocial-n8n/compare/v1.0.0...v1.0.1) (2026-10-20)
 
 
