@@ -42,6 +42,17 @@ export const tiktokOperations: Record<string, OperationSpec> = {
 		],
 		body: 'json',
 	},
+	getPostSettings: {
+		method: 'GET',
+		path: '/api/v1/misc/tiktok/post-settings',
+		params: [
+			{
+				name: 'teamId',
+				in: 'query',
+				key: 'teamId',
+			},
+		],
+	},
 };
 
 export const tiktokProperties: INodeProperties[] = [
@@ -67,6 +78,12 @@ export const tiktokProperties: INodeProperties[] = [
 				value: 'deleteComment',
 				description: 'Delete a published TikTok comment',
 				action: 'Delete a comment',
+			},
+			{
+				name: 'Get Post Settings',
+				value: 'getPostSettings',
+				description: 'Returns the privacy levels, interaction settings (comments, duet, stitch) and maximum video duration the connected TikTok account allows, read live from TikTok',
+				action: 'Get the posting options of an account',
 			},
 		],
 		default: 'getTrendingCommercialMusic',
@@ -370,5 +387,22 @@ export const tiktokProperties: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The ID of the comment in bundle.social',
+	},
+	{
+		displayName: 'Team Name or ID',
+		name: 'teamId',
+		type: 'options',
+		required: true,
+		typeOptions: {
+			loadOptionsMethod: 'getTeams',
+		},
+		displayOptions: {
+			show: {
+				resource: ['tiktok'],
+				operation: ['getPostSettings'],
+			},
+		},
+		default: '',
+		description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
 	},
 ];

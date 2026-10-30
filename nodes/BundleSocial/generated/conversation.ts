@@ -715,6 +715,10 @@ export const conversationProperties: INodeProperties[] = [
 										value: 'POST',
 									},
 									{
+										name: 'Story Mention',
+										value: 'STORY_MENTION',
+									},
+									{
 										name: 'Unknown',
 										value: 'UNKNOWN',
 									},
@@ -1277,6 +1281,10 @@ export const conversationProperties: INodeProperties[] = [
 									{
 										name: 'Post',
 										value: 'POST',
+									},
+									{
+										name: 'Story Mention',
+										value: 'STORY_MENTION',
 									},
 									{
 										name: 'Unknown',
