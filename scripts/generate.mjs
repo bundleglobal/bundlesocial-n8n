@@ -412,13 +412,13 @@ function firstSentence(text, max = 200) {
 function sentenceCaseAction(summary, brands = []) {
 	let text = String(summary)
 		.replace(/\[[^\]]*\]/g, ' ')
-		.replace(/\([^)]*\)/g, ' ')
-		.replace(/\//g, ' or ')
-		.replace(/&/g, ' and ');
+		.replace(/\([^)]*\)/g, ' ');
+	// Brands go before "/" becomes "or", so a brand like "Twitter/X" still matches.
 	for (const brand of [...brands].sort((a, b) => b.length - a.length)) {
 		const escaped = brand.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
 		text = text.replace(new RegExp(`\\b${escaped}\\b`, 'g'), ' ');
 	}
+	text = text.replace(/\//g, ' or ').replace(/&/g, ' and ');
 	const words = text
 		.replace(/[^A-Za-z0-9 ]+/g, ' ')
 		.split(/\s+/)
@@ -428,7 +428,10 @@ function sentenceCaseAction(summary, brands = []) {
 			if (/^[A-Z0-9]+$/.test(word) && word.length > 1) return word;
 			return word.toLowerCase();
 		});
-	return words.join(' ');
+	// Dropping a brand can leave "a" in front of a vowel ("a TikTok account" -> "a account").
+	return words
+		.map((word, i) => (word === 'a' && /^[aeiou]/i.test(words[i + 1] ?? '') ? 'an' : word))
+		.join(' ');
 }
 
 // ---------- schema helpers ----------
