@@ -405,7 +405,7 @@ function firstSentence(text, max = 200) {
 		.trim();
 	const match = plain.match(/^(.+?[.!?])(\s|$)/);
 	let sentence = (match ? match[1] : plain).replace(/[.!?]$/, '');
-	if (sentence.length > max) sentence = sentence.slice(0, max - 3).replace(/\s+\S*$/, '') + '...';
+	if (sentence.length > max) sentence = sentence.slice(0, max - 3).replace(/\s+\S*$/, '') + '…'; // n8n lint rejects a description ending in '.', so not '...'
 	return sentence;
 }
 
