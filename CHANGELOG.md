@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/bundleglobal/bundlesocial-n8n/compare/v1.1.0...v1.2.0) (2026-11-04)
+
+
+### Features
+
+* Pinterest carousel Pins ([#3](https://github.com/bundleglobal/bundlesocial-n8n/issues/3)) ([3ffa8fd](https://github.com/bundleglobal/bundlesocial-n8n/commit/3ffa8fd820836226160e5513e412aea5897f2c08))
+
 # [1.1.0](https://github.com/bundleglobal/bundlesocial-n8n/compare/v1.0.2...v1.1.0) (2026-10-30)
 
 
