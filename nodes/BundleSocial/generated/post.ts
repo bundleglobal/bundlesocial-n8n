@@ -137,6 +137,11 @@ export const postOperations: Record<string, OperationSpec> = {
 						uploadIds: {
 							kind: 'list',
 						},
+						carouselItems: {
+							kind: 'items',
+							multiple: true,
+							merge: 'additionalFields',
+						},
 					},
 				},
 			},
@@ -254,6 +259,14 @@ export const postOperations: Record<string, OperationSpec> = {
 					fields: {
 						uploadIds: {
 							kind: 'list',
+						},
+						poll: {
+							kind: 'object',
+							fields: {
+								options: {
+									kind: 'list',
+								},
+							},
 						},
 					},
 				},
@@ -517,6 +530,11 @@ export const postOperations: Record<string, OperationSpec> = {
 						uploadIds: {
 							kind: 'list',
 						},
+						carouselItems: {
+							kind: 'items',
+							multiple: true,
+							merge: 'additionalFields',
+						},
 					},
 				},
 			},
@@ -634,6 +652,14 @@ export const postOperations: Record<string, OperationSpec> = {
 					fields: {
 						uploadIds: {
 							kind: 'list',
+						},
+						poll: {
+							kind: 'object',
+							fields: {
+								options: {
+									kind: 'list',
+								},
+							},
 						},
 					},
 				},
@@ -1440,6 +1466,58 @@ export const postProperties: INodeProperties[] = [
 				default: '',
 			},
 			{
+				displayName: 'Carousel Items',
+				name: 'carouselItems',
+				type: 'fixedCollection',
+				typeOptions: {
+					multipleValues: true,
+				},
+				options: [
+					{
+						displayName: 'Carousel Item',
+						name: 'values',
+						values: [
+							{
+								displayName: 'Upload ID',
+								name: 'uploadId',
+								type: 'string',
+								required: true,
+								default: '',
+							},
+							{
+								displayName: 'Additional Fields',
+								name: 'additionalFields',
+								type: 'collection',
+								placeholder: 'Add Field',
+								default: {},
+								options: [
+									{
+										displayName: 'Title',
+										name: 'title',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Description',
+										name: 'description',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Link',
+										name: 'link',
+										type: 'string',
+										default: '',
+									},
+								],
+							},
+						],
+					},
+				],
+				default: {},
+				placeholder: 'Add Item',
+			},
+			{
 				displayName: 'Description',
 				name: 'description',
 				type: 'string',
@@ -2209,6 +2287,20 @@ export const postProperties: INodeProperties[] = [
 				description: 'Whether this video is promoting the creator\'s own business',
 			},
 			{
+				displayName: 'Location ID',
+				name: 'locationId',
+				type: 'string',
+				default: '',
+				description: 'TikTok location tag ID',
+			},
+			{
+				displayName: 'Location Name',
+				name: 'locationName',
+				type: 'string',
+				default: '',
+				description: 'Name of the TikTok location tag',
+			},
+			{
 				displayName: 'Music Sound Info',
 				name: 'musicSoundInfo',
 				type: 'collection',
@@ -2326,6 +2418,13 @@ export const postProperties: INodeProperties[] = [
 				description: 'Choose a frame of the published video as the cover photo in ms',
 			},
 			{
+				displayName: 'Title',
+				name: 'title',
+				type: 'string',
+				default: '',
+				description: 'Title of the photo post (IMAGE only)',
+			},
+			{
 				displayName: 'Type',
 				name: 'type',
 				type: 'options',
@@ -2398,6 +2497,53 @@ export const postProperties: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				description: 'Title for video or document posts. If not provided for videos, LinkedIn displays the posting date under the video.',
+			},
+			{
+				displayName: 'Poll',
+				name: 'poll',
+				type: 'collection',
+				options: [
+					{
+						displayName: 'Question',
+						name: 'question',
+						type: 'string',
+						default: '',
+					},
+					{
+						displayName: 'Options',
+						name: 'options',
+						type: 'string',
+						default: '',
+						hint: 'Comma-separated list, or an array from an expression',
+					},
+					{
+						displayName: 'Duration',
+						name: 'duration',
+						type: 'options',
+						options: [
+							{
+								name: 'One Day',
+								value: 'ONE_DAY',
+							},
+							{
+								name: 'Three Days',
+								value: 'THREE_DAYS',
+							},
+							{
+								name: 'Seven Days',
+								value: 'SEVEN_DAYS',
+							},
+							{
+								name: 'Fourteen Days',
+								value: 'FOURTEEN_DAYS',
+							},
+						],
+						default: 'THREE_DAYS',
+					},
+				],
+				default: {},
+				placeholder: 'Add Field',
+				description: 'A poll (question up to 140 characters, 2-4 options up to 30 characters each). Cannot be combined with media or a link. Polls cannot be edited after publishing.',
 			},
 			{
 				displayName: 'Privacy',
@@ -4054,6 +4200,58 @@ export const postProperties: INodeProperties[] = [
 				default: '',
 			},
 			{
+				displayName: 'Carousel Items',
+				name: 'carouselItems',
+				type: 'fixedCollection',
+				typeOptions: {
+					multipleValues: true,
+				},
+				options: [
+					{
+						displayName: 'Carousel Item',
+						name: 'values',
+						values: [
+							{
+								displayName: 'Upload ID',
+								name: 'uploadId',
+								type: 'string',
+								required: true,
+								default: '',
+							},
+							{
+								displayName: 'Additional Fields',
+								name: 'additionalFields',
+								type: 'collection',
+								placeholder: 'Add Field',
+								default: {},
+								options: [
+									{
+										displayName: 'Title',
+										name: 'title',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Description',
+										name: 'description',
+										type: 'string',
+										default: '',
+									},
+									{
+										displayName: 'Link',
+										name: 'link',
+										type: 'string',
+										default: '',
+									},
+								],
+							},
+						],
+					},
+				],
+				default: {},
+				placeholder: 'Add Item',
+			},
+			{
 				displayName: 'Description',
 				name: 'description',
 				type: 'string',
@@ -4827,6 +5025,20 @@ export const postProperties: INodeProperties[] = [
 				description: 'Whether this video is promoting the creator\'s own business',
 			},
 			{
+				displayName: 'Location ID',
+				name: 'locationId',
+				type: 'string',
+				default: '',
+				description: 'TikTok location tag ID',
+			},
+			{
+				displayName: 'Location Name',
+				name: 'locationName',
+				type: 'string',
+				default: '',
+				description: 'Name of the TikTok location tag',
+			},
+			{
 				displayName: 'Music Sound Info',
 				name: 'musicSoundInfo',
 				type: 'collection',
@@ -4944,6 +5156,13 @@ export const postProperties: INodeProperties[] = [
 				description: 'Choose a frame of the published video as the cover photo in ms',
 			},
 			{
+				displayName: 'Title',
+				name: 'title',
+				type: 'string',
+				default: '',
+				description: 'Title of the photo post (IMAGE only)',
+			},
+			{
 				displayName: 'Type',
 				name: 'type',
 				type: 'options',
@@ -5017,6 +5236,53 @@ export const postProperties: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				description: 'Title for video or document posts. If not provided for videos, LinkedIn displays the posting date under the video.',
+			},
+			{
+				displayName: 'Poll',
+				name: 'poll',
+				type: 'collection',
+				options: [
+					{
+						displayName: 'Question',
+						name: 'question',
+						type: 'string',
+						default: '',
+					},
+					{
+						displayName: 'Options',
+						name: 'options',
+						type: 'string',
+						default: '',
+						hint: 'Comma-separated list, or an array from an expression',
+					},
+					{
+						displayName: 'Duration',
+						name: 'duration',
+						type: 'options',
+						options: [
+							{
+								name: 'One Day',
+								value: 'ONE_DAY',
+							},
+							{
+								name: 'Three Days',
+								value: 'THREE_DAYS',
+							},
+							{
+								name: 'Seven Days',
+								value: 'SEVEN_DAYS',
+							},
+							{
+								name: 'Fourteen Days',
+								value: 'FOURTEEN_DAYS',
+							},
+						],
+						default: 'THREE_DAYS',
+					},
+				],
+				default: {},
+				placeholder: 'Add Field',
+				description: 'A poll (question up to 140 characters, 2-4 options up to 30 characters each). Cannot be combined with media or a link. Polls cannot be edited after publishing.',
 			},
 			{
 				displayName: 'Privacy',

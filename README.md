@@ -61,7 +61,7 @@ The node can be attached to an AI Agent as a tool. On self-hosted n8n set `N8N_C
 
 <!-- operations:start -->
 
-195 operations across 27 resources, generated from the bundle.social OpenAPI spec.
+197 operations across 27 resources, generated from the bundle.social OpenAPI spec.
 
 <details>
 <summary><b>Analytics</b> (7)</summary>
@@ -283,7 +283,7 @@ The node can be attached to an AI Agent as a tool. On self-hosted n8n set `N8N_C
 </details>
 
 <details>
-<summary><b>Organization</b> (6)</summary>
+<summary><b>Organization</b> (7)</summary>
 
 | Operation | Endpoint |
 |---|---|
@@ -291,6 +291,7 @@ The node can be attached to an AI Agent as a tool. On self-hosted n8n set `N8N_C
 | Get Comments Usage | `GET /api/v1/organization/usage/comments` |
 | Get Daily Limits Usage | `GET /api/v1/organization/usage/daily-limits` |
 | Get Imports Usage | `GET /api/v1/organization/usage/imports` |
+| Get Messages Usage | `GET /api/v1/organization/usage/messages` |
 | Get Posts Usage | `GET /api/v1/organization/usage/posts` |
 | Get Uploads Usage | `GET /api/v1/organization/usage/uploads` |
 
@@ -409,13 +410,14 @@ The node can be attached to an AI Agent as a tool. On self-hosted n8n set `N8N_C
 </details>
 
 <details>
-<summary><b>TikTok</b> (3)</summary>
+<summary><b>TikTok</b> (4)</summary>
 
 | Operation | Endpoint |
 |---|---|
 | Delete Comment | `DELETE /api/v1/misc/tiktok/comment` |
 | Get Post Settings | `GET /api/v1/misc/tiktok/post-settings` |
 | Get Trending Commercial Music | `GET /api/v1/misc/tiktok/cml/trending-list` |
+| Search Locations | `GET /api/v1/misc/tiktok/locations` |
 
 </details>
 
