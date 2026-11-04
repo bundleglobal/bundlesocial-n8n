@@ -3,6 +3,22 @@ import type { INodeProperties } from 'n8n-workflow';
 import type { OperationSpec } from '../shared/types';
 
 export const tiktokOperations: Record<string, OperationSpec> = {
+	searchLocations: {
+		method: 'GET',
+		path: '/api/v1/misc/tiktok/locations',
+		params: [
+			{
+				name: 'teamId',
+				in: 'query',
+				key: 'teamId',
+			},
+			{
+				name: 'q',
+				in: 'query',
+				key: 'q',
+			},
+		],
+	},
 	getTrendingCommercialMusic: {
 		method: 'GET',
 		path: '/api/v1/misc/tiktok/cml/trending-list',
@@ -68,6 +84,12 @@ export const tiktokProperties: INodeProperties[] = [
 		},
 		options: [
 			{
+				name: 'Search Locations',
+				value: 'searchLocations',
+				description: 'Searches location tags available to the connected TikTok account (up to 20 results)',
+				action: 'Search location tags',
+			},
+			{
 				name: 'Get Trending Commercial Music',
 				value: 'getTrendingCommercialMusic',
 				description: 'Retrieve up to 100 popular tracks pre-cleared for organic content and ad creation from TikTok CML',
@@ -86,7 +108,38 @@ export const tiktokProperties: INodeProperties[] = [
 				action: 'Get the posting options of an account',
 			},
 		],
-		default: 'getTrendingCommercialMusic',
+		default: 'searchLocations',
+	},
+	{
+		displayName: 'Team Name or ID',
+		name: 'teamId',
+		type: 'options',
+		required: true,
+		typeOptions: {
+			loadOptionsMethod: 'getTeams',
+		},
+		displayOptions: {
+			show: {
+				resource: ['tiktok'],
+				operation: ['searchLocations'],
+			},
+		},
+		default: '',
+		description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+	},
+	{
+		displayName: 'Q',
+		name: 'q',
+		type: 'string',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['tiktok'],
+				operation: ['searchLocations'],
+			},
+		},
+		default: '',
+		description: 'Free-text query used to search TikTok location tags',
 	},
 	{
 		displayName: 'Team Name or ID',

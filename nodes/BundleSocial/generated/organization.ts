@@ -59,6 +59,23 @@ export const organizationOperations: Record<string, OperationSpec> = {
 			},
 		],
 	},
+	getMessagesUsage: {
+		method: 'GET',
+		path: '/api/v1/organization/usage/messages',
+		params: [
+			{
+				name: 'options',
+				in: 'queryMerge',
+				shape: {
+					kind: 'object',
+				},
+			},
+		],
+		pagination: {
+			itemsKey: 'items',
+			pageSize: 100,
+		},
+	},
 };
 
 export const organizationProperties: INodeProperties[] = [
@@ -96,6 +113,12 @@ export const organizationProperties: INodeProperties[] = [
 				value: 'getImportsUsage',
 				description: 'See how much import capacity each social account has consumed, paginated and filterable by team or platform',
 				action: 'Get organization imports usage per social account',
+			},
+			{
+				name: 'Get Messages Usage',
+				value: 'getMessagesUsage',
+				description: 'See how many direct messages and automation runs each Facebook, Instagram and TikTok account has used this UTC calendar month against its monthly limits, paginated with offset/limit and filterable…',
+				action: 'Get DM and automation run usage per social account',
 			},
 			{
 				name: 'Get Posts Usage',
@@ -264,6 +287,91 @@ export const organizationProperties: INodeProperties[] = [
 				type: 'options',
 				typeOptions: {
 					loadOptionsMethod: 'getTeams',
+				},
+				default: '',
+				description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+			},
+		],
+		default: {},
+		placeholder: 'Add Option',
+	},
+	{
+		displayName: 'Return All',
+		name: 'returnAll',
+		type: 'boolean',
+		displayOptions: {
+			show: {
+				resource: ['organization'],
+				operation: ['getMessagesUsage'],
+			},
+		},
+		default: false,
+		description: 'Whether to return all results or only up to a given limit',
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		typeOptions: {
+			minValue: 1,
+		},
+		displayOptions: {
+			show: {
+				resource: ['organization'],
+				operation: ['getMessagesUsage'],
+				returnAll: [false],
+			},
+		},
+		default: 50,
+		description: 'Max number of results to return',
+	},
+	{
+		displayName: 'Options',
+		name: 'options',
+		type: 'collection',
+		displayOptions: {
+			show: {
+				resource: ['organization'],
+				operation: ['getMessagesUsage'],
+			},
+		},
+		options: [
+			{
+				displayName: 'Team Name or ID',
+				name: 'teamId',
+				type: 'options',
+				typeOptions: {
+					loadOptionsMethod: 'getTeams',
+				},
+				default: '',
+				description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+			},
+			{
+				displayName: 'Social Account Type',
+				name: 'socialAccountType',
+				type: 'options',
+				options: [
+					{
+						name: 'Instagram',
+						value: 'INSTAGRAM',
+					},
+					{
+						name: 'Facebook',
+						value: 'FACEBOOK',
+					},
+					{
+						name: 'TikTok',
+						value: 'TIKTOK',
+					},
+				],
+				default: 'INSTAGRAM',
+			},
+			{
+				displayName: 'Social Account Name or ID',
+				name: 'socialAccountId',
+				type: 'options',
+				typeOptions: {
+					loadOptionsMethod: 'getSocialAccounts',
 				},
 				default: '',
 				description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
