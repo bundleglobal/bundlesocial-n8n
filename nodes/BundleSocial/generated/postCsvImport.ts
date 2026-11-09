@@ -20,6 +20,7 @@ export const postCsvImportOperations: Record<string, OperationSpec> = {
 		path: '/api/v1/post-csv-import/',
 		params: [],
 		pagination: {
+			type: 'offset',
 			itemsKey: 'items',
 			pageSize: 100,
 		},
@@ -64,6 +65,7 @@ export const postCsvImportOperations: Record<string, OperationSpec> = {
 			},
 		],
 		pagination: {
+			type: 'offset',
 			itemsKey: 'items',
 			pageSize: 100,
 		},

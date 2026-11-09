@@ -40,14 +40,13 @@ export const googleBusinessProfileOperations: Record<string, OperationSpec> = {
 				in: 'query',
 				key: 'teamId',
 			},
-			{
-				name: 'options',
-				in: 'queryMerge',
-				shape: {
-					kind: 'object',
-				},
-			},
 		],
+		pagination: {
+			type: 'token',
+			itemsKey: 'mediaItems',
+			pageSize: 100,
+			sizeParam: 'pageSize',
+		},
 	},
 	deleteMedia: {
 		method: 'DELETE',
@@ -449,6 +448,12 @@ export const googleBusinessProfileOperations: Record<string, OperationSpec> = {
 				},
 			},
 		],
+		pagination: {
+			type: 'token',
+			itemsKey: 'attributes',
+			pageSize: 100,
+			sizeParam: 'pageSize',
+		},
 	},
 	listSearchKeywords: {
 		method: 'GET',
@@ -469,14 +474,13 @@ export const googleBusinessProfileOperations: Record<string, OperationSpec> = {
 				in: 'query',
 				key: 'endMonth',
 			},
-			{
-				name: 'options',
-				in: 'queryMerge',
-				shape: {
-					kind: 'object',
-				},
-			},
 		],
+		pagination: {
+			type: 'token',
+			itemsKey: 'searchKeywords',
+			pageSize: 100,
+			sizeParam: 'pageSize',
+		},
 	},
 	listCategories: {
 		method: 'GET',
@@ -510,6 +514,12 @@ export const googleBusinessProfileOperations: Record<string, OperationSpec> = {
 				},
 			},
 		],
+		pagination: {
+			type: 'token',
+			itemsKey: 'categories',
+			pageSize: 50,
+			sizeParam: 'pageSize',
+		},
 	},
 	getServiceList: {
 		method: 'GET',
@@ -615,14 +625,13 @@ export const googleBusinessProfileOperations: Record<string, OperationSpec> = {
 				in: 'query',
 				key: 'teamId',
 			},
-			{
-				name: 'options',
-				in: 'queryMerge',
-				shape: {
-					kind: 'object',
-				},
-			},
 		],
+		pagination: {
+			type: 'token',
+			itemsKey: 'placeActionLinks',
+			pageSize: 100,
+			sizeParam: 'pageSize',
+		},
 	},
 	createPlaceActionLink: {
 		method: 'POST',
@@ -763,6 +772,7 @@ export const googleBusinessProfileOperations: Record<string, OperationSpec> = {
 			},
 		],
 		pagination: {
+			type: 'offset',
 			itemsKey: 'reviews',
 			pageSize: 100,
 		},
@@ -1185,39 +1195,34 @@ export const googleBusinessProfileProperties: INodeProperties[] = [
 		description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
 	},
 	{
-		displayName: 'Options',
-		name: 'options',
-		type: 'collection',
+		displayName: 'Return All',
+		name: 'returnAll',
+		type: 'boolean',
 		displayOptions: {
 			show: {
 				resource: ['googleBusinessProfile'],
 				operation: ['listMedia'],
 			},
 		},
-		options: [
-			{
-				displayName: 'Page Size',
-				name: 'pageSize',
-				type: 'number',
-				typeOptions: {
-					minValue: 1,
-					maxValue: 250,
-					numberPrecision: 0,
-				},
-				default: 1,
+		default: false,
+		description: 'Whether to return all results or only up to a given limit',
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		typeOptions: {
+			minValue: 1,
+		},
+		displayOptions: {
+			show: {
+				resource: ['googleBusinessProfile'],
+				operation: ['listMedia'],
+				returnAll: [false],
 			},
-			{
-				displayName: 'Page Token',
-				name: 'pageToken',
-				type: 'string',
-				typeOptions: {
-					password: true,
-				},
-				default: '',
-			},
-		],
-		default: {},
-		placeholder: 'Add Option',
+		},
+		default: 50,
+		description: 'Max number of results to return',
 	},
 	{
 		displayName: 'Specify Body',
@@ -2916,6 +2921,36 @@ export const googleBusinessProfileProperties: INodeProperties[] = [
 		description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
 	},
 	{
+		displayName: 'Return All',
+		name: 'returnAll',
+		type: 'boolean',
+		displayOptions: {
+			show: {
+				resource: ['googleBusinessProfile'],
+				operation: ['listAvailableAttributes'],
+			},
+		},
+		default: false,
+		description: 'Whether to return all results or only up to a given limit',
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		typeOptions: {
+			minValue: 1,
+		},
+		displayOptions: {
+			show: {
+				resource: ['googleBusinessProfile'],
+				operation: ['listAvailableAttributes'],
+				returnAll: [false],
+			},
+		},
+		default: 50,
+		description: 'Max number of results to return',
+	},
+	{
 		displayName: 'Options',
 		name: 'options',
 		type: 'collection',
@@ -2936,26 +2971,6 @@ export const googleBusinessProfileProperties: INodeProperties[] = [
 				displayName: 'Region Code',
 				name: 'regionCode',
 				type: 'string',
-				default: '',
-			},
-			{
-				displayName: 'Page Size',
-				name: 'pageSize',
-				type: 'number',
-				typeOptions: {
-					minValue: 1,
-					maxValue: 200,
-					numberPrecision: 0,
-				},
-				default: 1,
-			},
-			{
-				displayName: 'Page Token',
-				name: 'pageToken',
-				type: 'string',
-				typeOptions: {
-					password: true,
-				},
 				default: '',
 			},
 		],
@@ -3008,39 +3023,34 @@ export const googleBusinessProfileProperties: INodeProperties[] = [
 		description: 'Month in <code>YYYY-MM</code> format, inclusive',
 	},
 	{
-		displayName: 'Options',
-		name: 'options',
-		type: 'collection',
+		displayName: 'Return All',
+		name: 'returnAll',
+		type: 'boolean',
 		displayOptions: {
 			show: {
 				resource: ['googleBusinessProfile'],
 				operation: ['listSearchKeywords'],
 			},
 		},
-		options: [
-			{
-				displayName: 'Page Size',
-				name: 'pageSize',
-				type: 'number',
-				typeOptions: {
-					minValue: 1,
-					maxValue: 100,
-					numberPrecision: 0,
-				},
-				default: 1,
+		default: false,
+		description: 'Whether to return all results or only up to a given limit',
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		typeOptions: {
+			minValue: 1,
+		},
+		displayOptions: {
+			show: {
+				resource: ['googleBusinessProfile'],
+				operation: ['listSearchKeywords'],
+				returnAll: [false],
 			},
-			{
-				displayName: 'Page Token',
-				name: 'pageToken',
-				type: 'string',
-				typeOptions: {
-					password: true,
-				},
-				default: '',
-			},
-		],
-		default: {},
-		placeholder: 'Add Option',
+		},
+		default: 50,
+		description: 'Max number of results to return',
 	},
 	{
 		displayName: 'Team Name or ID',
@@ -3086,6 +3096,36 @@ export const googleBusinessProfileProperties: INodeProperties[] = [
 		default: '',
 	},
 	{
+		displayName: 'Return All',
+		name: 'returnAll',
+		type: 'boolean',
+		displayOptions: {
+			show: {
+				resource: ['googleBusinessProfile'],
+				operation: ['listCategories'],
+			},
+		},
+		default: false,
+		description: 'Whether to return all results or only up to a given limit',
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		typeOptions: {
+			minValue: 1,
+		},
+		displayOptions: {
+			show: {
+				resource: ['googleBusinessProfile'],
+				operation: ['listCategories'],
+				returnAll: [false],
+			},
+		},
+		default: 50,
+		description: 'Max number of results to return',
+	},
+	{
 		displayName: 'Options',
 		name: 'options',
 		type: 'collection',
@@ -3097,12 +3137,6 @@ export const googleBusinessProfileProperties: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Filter',
-				name: 'filter',
-				type: 'string',
-				default: '',
-			},
-			{
 				displayName: 'Names',
 				name: 'names',
 				type: 'string',
@@ -3110,23 +3144,9 @@ export const googleBusinessProfileProperties: INodeProperties[] = [
 				hint: 'Comma-separated list, or an array from an expression',
 			},
 			{
-				displayName: 'Page Size',
-				name: 'pageSize',
-				type: 'number',
-				typeOptions: {
-					minValue: 50,
-					maxValue: 50,
-					numberPrecision: 0,
-				},
-				default: 50,
-			},
-			{
-				displayName: 'Page Token',
-				name: 'pageToken',
+				displayName: 'Filter',
+				name: 'filter',
 				type: 'string',
-				typeOptions: {
-					password: true,
-				},
 				default: '',
 			},
 			{
@@ -3432,39 +3452,34 @@ export const googleBusinessProfileProperties: INodeProperties[] = [
 		description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
 	},
 	{
-		displayName: 'Options',
-		name: 'options',
-		type: 'collection',
+		displayName: 'Return All',
+		name: 'returnAll',
+		type: 'boolean',
 		displayOptions: {
 			show: {
 				resource: ['googleBusinessProfile'],
 				operation: ['listPlaceActionLinks'],
 			},
 		},
-		options: [
-			{
-				displayName: 'Page Size',
-				name: 'pageSize',
-				type: 'number',
-				typeOptions: {
-					minValue: 1,
-					maxValue: 100,
-					numberPrecision: 0,
-				},
-				default: 1,
+		default: false,
+		description: 'Whether to return all results or only up to a given limit',
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		typeOptions: {
+			minValue: 1,
+		},
+		displayOptions: {
+			show: {
+				resource: ['googleBusinessProfile'],
+				operation: ['listPlaceActionLinks'],
+				returnAll: [false],
 			},
-			{
-				displayName: 'Page Token',
-				name: 'pageToken',
-				type: 'string',
-				typeOptions: {
-					password: true,
-				},
-				default: '',
-			},
-		],
-		default: {},
-		placeholder: 'Add Option',
+		},
+		default: 50,
+		description: 'Max number of results to return',
 	},
 	{
 		displayName: 'Specify Body',

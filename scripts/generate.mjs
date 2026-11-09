@@ -734,6 +734,47 @@ function jsonSchemaOf(content, type) {
 	return content?.[type]?.schema;
 }
 
+/**
+ * Finds how a list operation pages: offset + limit, page number + page size, or a page token
+ * returned as `nextPageToken`. Returns the spec for the executor and the query parameters it owns.
+ */
+function detectPagination(queryParams, responseSchema) {
+	const param = (name) => queryParams.find((p) => p.name === name);
+	const root = responseSchema ? resolveSchema(responseSchema) : undefined;
+	if (!root) return undefined;
+	const itemsKey =
+		root.type === 'array'
+			? undefined
+			: Object.keys(root.properties ?? {}).find((k) => resolveSchema(root.properties[k]).type === 'array');
+	if (root.type !== 'array' && !itemsKey) return undefined;
+	const sizeOf = (p) => {
+		const max = p?.schema?.maximum;
+		return Math.min(DEFAULT_PAGE_SIZE, typeof max === 'number' ? max : DEFAULT_PAGE_SIZE);
+	};
+	const base = itemsKey ? { itemsKey } : {};
+	// The node follows cursors itself, so a raw cursor is never offered next to Return All.
+	const owned = (...names) => [...names, ...(param('cursor') ? ['cursor'] : [])];
+
+	if (param('offset') && param('limit')) {
+		return { params: owned('offset', 'limit'), spec: { type: 'offset', ...base, pageSize: sizeOf(param('limit')) } };
+	}
+	const sizeParam = ['pageSize', 'limit'].find((name) => param(name));
+	if (param('page') && sizeParam) {
+		return {
+			params: owned('page', sizeParam),
+			spec: { type: 'page', ...base, pageSize: sizeOf(param(sizeParam)), sizeParam },
+		};
+	}
+	if (param('pageToken') && root.properties?.nextPageToken) {
+		const size = param('pageSize');
+		return {
+			params: owned('pageToken', ...(size ? ['pageSize'] : [])),
+			spec: { type: 'token', ...base, pageSize: sizeOf(size), ...(size ? { sizeParam: 'pageSize' } : {}) },
+		};
+	}
+	return undefined;
+}
+
 // Operation being generated, for per-operation description overrides.
 let currentOperationId = '';
 
@@ -798,27 +839,15 @@ function buildOperation(operationId, method, apiPath, op) {
 		params.push({ name: field.prop.name, in: 'path', key });
 	}
 
-	// Offset pagination when the response carries `total` plus an array of items.
+	// List operations page internally behind Return All + Limit; their paging parameters are never shown.
 	const responseSchema = jsonSchemaOf((op.responses?.['200'] ?? op.responses?.['201'])?.content, 'application/json');
-	const hasOffset = queryParams.some((p) => p.name === 'offset');
-	const limitParam = queryParams.find((p) => p.name === 'limit');
-	let pagination;
-	if (hasOffset && limitParam && responseSchema?.properties?.total) {
-		const itemsKey = Object.keys(responseSchema.properties).find(
-			(k) => resolveSchema(responseSchema.properties[k]).type === 'array',
-		);
-		if (itemsKey) {
-			const max = limitParam.schema?.maximum;
-			pagination = { itemsKey, pageSize: Math.min(DEFAULT_PAGE_SIZE, typeof max === 'number' ? max : DEFAULT_PAGE_SIZE) };
-		}
-	}
+	const detected = detectPagination(queryParams, responseSchema);
+	const pagination = detected?.spec;
+	const pagingParams = new Set(detected?.params ?? []);
 
-	const requiredQuery = queryParams.filter((p) => p.required);
-	const optionalQuery = queryParams.filter(
-		(p) => !p.required && !(pagination && (p.name === 'offset' || p.name === 'limit')),
-	);
+	const requiredQuery = queryParams.filter((p) => p.required && !pagingParams.has(p.name));
+	const optionalQuery = queryParams.filter((p) => !p.required && !pagingParams.has(p.name));
 	for (const param of requiredQuery) {
-		if (pagination && (param.name === 'offset' || param.name === 'limit')) continue;
 		const field = buildField(param.name, { ...param.schema, description: param.description ?? param.schema?.description }, {
 			depth: 0,
 			required: true,

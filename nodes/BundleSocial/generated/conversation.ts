@@ -21,6 +21,7 @@ export const conversationOperations: Record<string, OperationSpec> = {
 			},
 		],
 		pagination: {
+			type: 'offset',
 			itemsKey: 'items',
 			pageSize: 100,
 		},
@@ -66,15 +67,9 @@ export const conversationOperations: Record<string, OperationSpec> = {
 				in: 'path',
 				key: 'id',
 			},
-			{
-				name: 'options',
-				in: 'queryMerge',
-				shape: {
-					kind: 'object',
-				},
-			},
 		],
 		pagination: {
+			type: 'offset',
 			itemsKey: 'items',
 			pageSize: 100,
 		},
@@ -457,12 +452,6 @@ export const conversationProperties: INodeProperties[] = [
 				],
 				default: 'OPEN',
 			},
-			{
-				displayName: 'Cursor',
-				name: 'cursor',
-				type: 'string',
-				default: '',
-			},
 		],
 		default: {},
 		placeholder: 'Add Option',
@@ -596,27 +585,6 @@ export const conversationProperties: INodeProperties[] = [
 		},
 		default: 50,
 		description: 'Max number of results to return',
-	},
-	{
-		displayName: 'Options',
-		name: 'options',
-		type: 'collection',
-		displayOptions: {
-			show: {
-				resource: ['conversation'],
-				operation: ['getMessages'],
-			},
-		},
-		options: [
-			{
-				displayName: 'Cursor',
-				name: 'cursor',
-				type: 'string',
-				default: '',
-			},
-		],
-		default: {},
-		placeholder: 'Add Option',
 	},
 	{
 		displayName: 'Conversation ID',

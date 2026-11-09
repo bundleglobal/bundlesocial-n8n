@@ -23,6 +23,10 @@ export const uploadOperations: Record<string, OperationSpec> = {
 				},
 			},
 		],
+		pagination: {
+			type: 'offset',
+			pageSize: 100,
+		},
 	},
 	uploadFile: {
 		method: 'POST',
@@ -407,6 +411,36 @@ export const uploadProperties: INodeProperties[] = [
 		default: 'getAll',
 	},
 	{
+		displayName: 'Return All',
+		name: 'returnAll',
+		type: 'boolean',
+		displayOptions: {
+			show: {
+				resource: ['upload'],
+				operation: ['getAll'],
+			},
+		},
+		default: false,
+		description: 'Whether to return all results or only up to a given limit',
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		typeOptions: {
+			minValue: 1,
+		},
+		displayOptions: {
+			show: {
+				resource: ['upload'],
+				operation: ['getAll'],
+				returnAll: [false],
+			},
+		},
+		default: 50,
+		description: 'Max number of results to return',
+	},
+	{
 		displayName: 'Options',
 		name: 'options',
 		type: 'collection',
@@ -429,27 +463,6 @@ export const uploadProperties: INodeProperties[] = [
 				name: 'includePosts',
 				type: 'boolean',
 				default: true,
-			},
-			{
-				displayName: 'Limit',
-				name: 'limit',
-				type: 'number',
-				typeOptions: {
-					minValue: 1,
-					maxValue: 100,
-				},
-				default: 50,
-				description: 'Max number of results to return',
-			},
-			{
-				displayName: 'Offset',
-				name: 'offset',
-				type: 'number',
-				typeOptions: {
-					minValue: 0,
-					numberPrecision: 0,
-				},
-				default: 0,
 			},
 			{
 				displayName: 'Status',

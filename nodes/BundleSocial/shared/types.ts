@@ -42,6 +42,20 @@ export interface ParamMapping {
 	shape?: FieldShape;
 }
 
+/**
+ * How a list operation pages behind Return All + Limit.
+ * offset: `offset` + `limit`; page: `page` + `sizeParam`; token: `pageToken` from the previous `nextPageToken`.
+ */
+export interface Pagination {
+	type: 'offset' | 'page' | 'token';
+	// Response key of the items array; absent when the response itself is the array.
+	itemsKey?: string;
+	// Largest page size the API accepts.
+	pageSize: number;
+	// Query parameter carrying the page size, for page and token pagination.
+	sizeParam?: string;
+}
+
 export interface OperationSpec {
 	method: IHttpRequestMethods;
 	path: string;
@@ -51,8 +65,7 @@ export interface OperationSpec {
 	jsonBodyOnly?: boolean;
 	// Required objects sent even when none of their fields are set.
 	bodyDefaults?: IDataObject;
-	// Offset pagination: response array key and the largest page size the API accepts.
-	pagination?: { itemsKey: string; pageSize: number };
+	pagination?: Pagination;
 	// Operation that chains several requests, implemented by hand in execute.ts.
 	custom?: 'uploadLargeFile';
 }

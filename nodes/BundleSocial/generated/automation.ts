@@ -21,6 +21,7 @@ export const automationOperations: Record<string, OperationSpec> = {
 			},
 		],
 		pagination: {
+			type: 'offset',
 			itemsKey: 'items',
 			pageSize: 100,
 		},
@@ -277,6 +278,7 @@ export const automationOperations: Record<string, OperationSpec> = {
 			},
 		],
 		pagination: {
+			type: 'offset',
 			itemsKey: 'items',
 			pageSize: 100,
 		},
@@ -1544,12 +1546,6 @@ export const automationProperties: INodeProperties[] = [
 			{
 				displayName: 'Conversation ID',
 				name: 'conversationId',
-				type: 'string',
-				default: '',
-			},
-			{
-				displayName: 'Cursor',
-				name: 'cursor',
 				type: 'string',
 				default: '',
 			},

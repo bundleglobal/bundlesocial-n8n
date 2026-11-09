@@ -78,14 +78,13 @@ export const analyticsOperations: Record<string, OperationSpec> = {
 				in: 'query',
 				key: 'platformType',
 			},
-			{
-				name: 'options',
-				in: 'queryMerge',
-				shape: {
-					kind: 'object',
-				},
-			},
 		],
+		pagination: {
+			type: 'page',
+			itemsKey: 'results',
+			pageSize: 20,
+			sizeParam: 'limit',
+		},
 	},
 	refreshSocialAccountAnalytics: {
 		method: 'POST',
@@ -609,39 +608,34 @@ export const analyticsProperties: INodeProperties[] = [
 		default: 'BLUESKY',
 	},
 	{
-		displayName: 'Options',
-		name: 'options',
-		type: 'collection',
+		displayName: 'Return All',
+		name: 'returnAll',
+		type: 'boolean',
 		displayOptions: {
 			show: {
 				resource: ['analytics'],
 				operation: ['getBulkPostAnalytics'],
 			},
 		},
-		options: [
-			{
-				displayName: 'Page',
-				name: 'page',
-				type: 'number',
-				typeOptions: {
-					minValue: 1,
-				},
-				default: 1,
+		default: false,
+		description: 'Whether to return all results or only up to a given limit',
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		typeOptions: {
+			minValue: 1,
+		},
+		displayOptions: {
+			show: {
+				resource: ['analytics'],
+				operation: ['getBulkPostAnalytics'],
+				returnAll: [false],
 			},
-			{
-				displayName: 'Limit',
-				name: 'limit',
-				type: 'number',
-				typeOptions: {
-					minValue: 1,
-					maxValue: 20,
-				},
-				default: 50,
-				description: 'Max number of results to return',
-			},
-		],
-		default: {},
-		placeholder: 'Add Option',
+		},
+		default: 50,
+		description: 'Max number of results to return',
 	},
 	{
 		displayName: 'Specify Body',

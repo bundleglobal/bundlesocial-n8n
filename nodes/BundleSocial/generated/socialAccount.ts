@@ -289,15 +289,13 @@ export const socialAccountOperations: Record<string, OperationSpec> = {
 	getScheduledForDeletion: {
 		method: 'GET',
 		path: '/api/v1/social-account/to-delete',
-		params: [
-			{
-				name: 'options',
-				in: 'queryMerge',
-				shape: {
-					kind: 'object',
-				},
-			},
-		],
+		params: [],
+		pagination: {
+			type: 'page',
+			itemsKey: 'items',
+			pageSize: 100,
+			sizeParam: 'pageSize',
+		},
 	},
 };
 
@@ -2108,37 +2106,33 @@ export const socialAccountProperties: INodeProperties[] = [
 		placeholder: 'Add Field',
 	},
 	{
-		displayName: 'Options',
-		name: 'options',
-		type: 'collection',
+		displayName: 'Return All',
+		name: 'returnAll',
+		type: 'boolean',
 		displayOptions: {
 			show: {
 				resource: ['socialAccount'],
 				operation: ['getScheduledForDeletion'],
 			},
 		},
-		options: [
-			{
-				displayName: 'Page',
-				name: 'page',
-				type: 'number',
-				typeOptions: {
-					minValue: 1,
-				},
-				default: 1,
+		default: false,
+		description: 'Whether to return all results or only up to a given limit',
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		typeOptions: {
+			minValue: 1,
+		},
+		displayOptions: {
+			show: {
+				resource: ['socialAccount'],
+				operation: ['getScheduledForDeletion'],
+				returnAll: [false],
 			},
-			{
-				displayName: 'Page Size',
-				name: 'pageSize',
-				type: 'number',
-				typeOptions: {
-					minValue: 1,
-					maxValue: 100,
-				},
-				default: 20,
-			},
-		],
-		default: {},
-		placeholder: 'Add Option',
+		},
+		default: 50,
+		description: 'Max number of results to return',
 	},
 ];

@@ -137,6 +137,65 @@ describe('Post > Get Many', () => {
 	});
 });
 
+describe('internal pagination', () => {
+	const ids = (n, prefix) => Array.from({ length: n }, (_, i) => ({ id: `${prefix}${i}` }));
+
+	it('hides raw paging parameters on every list operation', () => {
+		const paging = new Set(['page', 'pageSize', 'pageToken', 'offset', 'cursor']);
+		const leaks = properties
+			.flatMap((p) => [p, ...(p.type === 'collection' ? p.options : [])].map((o) => ({ o, show: p.displayOptions?.show })))
+			.filter(({ o }) => paging.has(o.name))
+			.map(({ o, show }) => `${show?.resource?.[0]}.${show?.operation?.[0]}: ${o.name}`);
+		assert.deepEqual(leaks, []);
+	});
+
+	it('follows page numbers until the last page', async () => {
+		const page = (n, p) => ({ items: ids(n, `p${p}-`), pagination: { page: p, pageSize: 100, total: 130, totalPages: 2 } });
+		const { requests, output } = await run(
+			{ resource: 'socialAccount', operation: 'getScheduledForDeletion', returnAll: true },
+			{ responses: [page(100, 1), page(30, 2)] },
+		);
+		assert.deepEqual(
+			requests.map((r) => [r.qs.page, r.qs.pageSize]),
+			[
+				[1, 100],
+				[2, 100],
+			],
+		);
+		assert.equal(output.length, 130);
+	});
+
+	it('follows nextPageToken and stops at the limit', async () => {
+		const { requests, output } = await run(
+			{ resource: 'googleBusinessProfile', operation: 'listMedia', teamId: 't', limit: 150 },
+			{
+				responses: [
+					{ mediaItems: ids(100, 'a'), nextPageToken: 'tok-2' },
+					{ mediaItems: ids(100, 'b'), nextPageToken: 'tok-3' },
+				],
+			},
+		);
+		assert.deepEqual(
+			requests.map((r) => r.qs.pageToken),
+			[undefined, 'tok-2'],
+		);
+		assert.equal(requests[0].qs.pageSize, 100);
+		assert.equal(output.length, 150);
+	});
+
+	it('pages offset lists that return a bare array without a total', async () => {
+		const { requests, output } = await run(
+			{ resource: 'upload', operation: 'getAll', returnAll: true },
+			{ responses: [ids(100, 'u'), ids(7, 'v')] },
+		);
+		assert.deepEqual(
+			requests.map((r) => r.qs.offset),
+			[0, 100],
+		);
+		assert.equal(output.length, 107);
+	});
+});
+
 describe('requests', () => {
 	it('encodes path parameters', async () => {
 		const { requests } = await run({ resource: 'post', operation: 'get', id: 'abc/1' });

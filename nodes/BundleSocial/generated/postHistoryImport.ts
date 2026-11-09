@@ -81,6 +81,7 @@ export const postHistoryImportOperations: Record<string, OperationSpec> = {
 			},
 		],
 		pagination: {
+			type: 'offset',
 			itemsKey: 'posts',
 			pageSize: 100,
 		},
