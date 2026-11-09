@@ -19,6 +19,7 @@ export const postOperations: Record<string, OperationSpec> = {
 			},
 		],
 		pagination: {
+			type: 'offset',
 			itemsKey: 'items',
 			pageSize: 100,
 		},
@@ -444,6 +445,7 @@ export const postOperations: Record<string, OperationSpec> = {
 			},
 		],
 		pagination: {
+			type: 'offset',
 			itemsKey: 'items',
 			pageSize: 100,
 		},

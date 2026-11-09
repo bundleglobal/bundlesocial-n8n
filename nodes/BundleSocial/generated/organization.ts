@@ -58,6 +58,12 @@ export const organizationOperations: Record<string, OperationSpec> = {
 				},
 			},
 		],
+		pagination: {
+			type: 'page',
+			itemsKey: 'socialAccounts',
+			pageSize: 100,
+			sizeParam: 'pageSize',
+		},
 	},
 	getMessagesUsage: {
 		method: 'GET',
@@ -72,6 +78,7 @@ export const organizationOperations: Record<string, OperationSpec> = {
 			},
 		],
 		pagination: {
+			type: 'offset',
 			itemsKey: 'items',
 			pageSize: 100,
 		},
@@ -174,6 +181,36 @@ export const organizationProperties: INodeProperties[] = [
 		placeholder: 'Add Option',
 	},
 	{
+		displayName: 'Return All',
+		name: 'returnAll',
+		type: 'boolean',
+		displayOptions: {
+			show: {
+				resource: ['organization'],
+				operation: ['getImportsUsage'],
+			},
+		},
+		default: false,
+		description: 'Whether to return all results or only up to a given limit',
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		typeOptions: {
+			minValue: 1,
+		},
+		displayOptions: {
+			show: {
+				resource: ['organization'],
+				operation: ['getImportsUsage'],
+				returnAll: [false],
+			},
+		},
+		default: 50,
+		description: 'Max number of results to return',
+	},
+	{
 		displayName: 'Options',
 		name: 'options',
 		type: 'collection',
@@ -185,30 +222,11 @@ export const organizationProperties: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Page',
-				name: 'page',
-				type: 'number',
-				typeOptions: {
-					minValue: 1,
-				},
-				default: 1,
-			},
-			{
-				displayName: 'Page Size',
-				name: 'pageSize',
-				type: 'number',
-				typeOptions: {
-					minValue: 1,
-					maxValue: 100,
-				},
-				default: 20,
-			},
-			{
-				displayName: 'Social Account Name or ID',
-				name: 'socialAccountId',
+				displayName: 'Team Name or ID',
+				name: 'teamId',
 				type: 'options',
 				typeOptions: {
-					loadOptionsMethod: 'getSocialAccounts',
+					loadOptionsMethod: 'getTeams',
 				},
 				default: '',
 				description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
@@ -282,11 +300,11 @@ export const organizationProperties: INodeProperties[] = [
 				default: 'BLUESKY',
 			},
 			{
-				displayName: 'Team Name or ID',
-				name: 'teamId',
+				displayName: 'Social Account Name or ID',
+				name: 'socialAccountId',
 				type: 'options',
 				typeOptions: {
-					loadOptionsMethod: 'getTeams',
+					loadOptionsMethod: 'getSocialAccounts',
 				},
 				default: '',
 				description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',

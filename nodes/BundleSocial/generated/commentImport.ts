@@ -48,6 +48,11 @@ export const commentImportOperations: Record<string, OperationSpec> = {
 				},
 			},
 		],
+		pagination: {
+			type: 'offset',
+			itemsKey: 'imports',
+			pageSize: 100,
+		},
 	},
 	getFetchedComments: {
 		method: 'GET',
@@ -67,6 +72,7 @@ export const commentImportOperations: Record<string, OperationSpec> = {
 			},
 		],
 		pagination: {
+			type: 'offset',
 			itemsKey: 'items',
 			pageSize: 100,
 		},
@@ -319,6 +325,36 @@ export const commentImportProperties: INodeProperties[] = [
 		description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
 	},
 	{
+		displayName: 'Return All',
+		name: 'returnAll',
+		type: 'boolean',
+		displayOptions: {
+			show: {
+				resource: ['commentImport'],
+				operation: ['getAll'],
+			},
+		},
+		default: false,
+		description: 'Whether to return all results or only up to a given limit',
+	},
+	{
+		displayName: 'Limit',
+		name: 'limit',
+		type: 'number',
+		typeOptions: {
+			minValue: 1,
+		},
+		displayOptions: {
+			show: {
+				resource: ['commentImport'],
+				operation: ['getAll'],
+				returnAll: [false],
+			},
+		},
+		default: 50,
+		description: 'Max number of results to return',
+	},
+	{
 		displayName: 'Options',
 		name: 'options',
 		type: 'collection',
@@ -330,30 +366,14 @@ export const commentImportProperties: INodeProperties[] = [
 		},
 		options: [
 			{
-				displayName: 'Imported Post ID',
-				name: 'importedPostId',
+				displayName: 'Post ID',
+				name: 'postId',
 				type: 'string',
 				default: '',
 			},
 			{
-				displayName: 'Limit',
-				name: 'limit',
-				type: 'number',
-				typeOptions: {
-					minValue: 1,
-				},
-				default: 50,
-				description: 'Max number of results to return',
-			},
-			{
-				displayName: 'Offset',
-				name: 'offset',
-				type: 'number',
-				default: 0,
-			},
-			{
-				displayName: 'Post ID',
-				name: 'postId',
+				displayName: 'Imported Post ID',
+				name: 'importedPostId',
 				type: 'string',
 				default: '',
 			},

@@ -2,7 +2,7 @@ import type { IDataObject, IExecuteFunctions, INodeExecutionData } from 'n8n-wor
 import { NodeApiError, NodeOperationError } from 'n8n-workflow';
 import { operationSpecs } from '../generated';
 import { bundleSocialApiRequest, type BinaryStream, uploadToSignedUrl } from './transport';
-import type { FieldShape, OperationSpec, ParamMapping } from './types';
+import type { FieldShape, OperationSpec, Pagination, ParamMapping } from './types';
 
 const LOCAL_DATE_TIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?$/;
 
@@ -291,7 +291,7 @@ async function uploadLargeFile(
 async function paginate(
 	this: IExecuteFunctions,
 	spec: OperationSpec,
-	{ itemsKey, pageSize }: NonNullable<OperationSpec['pagination']>,
+	{ type, itemsKey, pageSize, sizeParam }: Pagination,
 	endpoint: string,
 	qs: IDataObject,
 	itemIndex: number,
@@ -300,17 +300,43 @@ async function paginate(
 	const limit = returnAll ? Infinity : (this.getNodeParameter('limit', itemIndex, 50) as number);
 	const results: IDataObject[] = [];
 	let offset = 0;
+	let page = 1;
+	let pageToken: string | undefined;
 
 	while (results.length < limit) {
-		const response = (await bundleSocialApiRequest.call(this, spec.method, endpoint, {
-			qs: { ...qs, offset, limit: Math.min(pageSize, limit - results.length) },
-			itemIndex,
-		})) as IDataObject;
-		const page = (response?.[itemsKey] as IDataObject[] | undefined) ?? [];
-		results.push(...page);
-		offset += page.length;
-		const total = typeof response?.total === 'number' ? response.total : undefined;
-		if (!page.length || (total !== undefined && offset >= total)) break;
+		const pageQs: IDataObject = { ...qs };
+		// Page numbers and tokens assume a fixed page size, so only offset paging shrinks the last request.
+		const requested = type === 'offset' ? Math.min(pageSize, limit - results.length) : pageSize;
+		if (type === 'offset') {
+			pageQs.offset = offset;
+			pageQs.limit = requested;
+		} else {
+			if (sizeParam) pageQs[sizeParam] = requested;
+			if (type === 'page') pageQs.page = page;
+			else if (pageToken) pageQs.pageToken = pageToken;
+		}
+
+		const response = await bundleSocialApiRequest.call(this, spec.method, endpoint, { qs: pageQs, itemIndex });
+		const body: IDataObject = isPlainObject(response) ? response : {};
+		const raw = itemsKey ? body[itemsKey] : response;
+		const items = Array.isArray(raw) ? (raw as IDataObject[]) : [];
+		results.push(...items);
+		if (!items.length) break;
+
+		if (type === 'offset') {
+			offset += items.length;
+			const total = typeof body.total === 'number' ? body.total : undefined;
+			if (total !== undefined ? offset >= total : items.length < requested) break;
+		} else if (type === 'page') {
+			const meta: IDataObject = isPlainObject(body.pagination) ? body.pagination : {};
+			const totalPages = typeof meta.totalPages === 'number' ? meta.totalPages : undefined;
+			if (totalPages !== undefined ? page >= totalPages : items.length < requested) break;
+			page++;
+		} else {
+			const next = typeof body.nextPageToken === 'string' ? body.nextPageToken : '';
+			if (!next || next === pageToken) break;
+			pageToken = next;
+		}
 	}
 	return results.slice(0, limit);
 }

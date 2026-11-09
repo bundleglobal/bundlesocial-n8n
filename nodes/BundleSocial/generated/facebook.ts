@@ -96,6 +96,7 @@ export const facebookOperations: Record<string, OperationSpec> = {
 			},
 		],
 		pagination: {
+			type: 'offset',
 			itemsKey: 'recommendations',
 			pageSize: 100,
 		},
