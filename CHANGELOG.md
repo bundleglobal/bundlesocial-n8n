@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/bundleglobal/bundlesocial-n8n/compare/v1.2.0...v1.2.1) (2026-11-09)
+
+
+### Bug Fixes
+
+* page list operations internally instead of exposing paging fields ([#4](https://github.com/bundleglobal/bundlesocial-n8n/issues/4)) ([307bf23](https://github.com/bundleglobal/bundlesocial-n8n/commit/307bf23b78ec591597ddbeff732be802670e9756))
+
 # [1.2.0](https://github.com/bundleglobal/bundlesocial-n8n/compare/v1.1.0...v1.2.0) (2026-11-04)
 
 
