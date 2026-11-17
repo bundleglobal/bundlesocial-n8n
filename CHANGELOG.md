@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/bundleglobal/bundlesocial-n8n/compare/v1.2.1...v1.3.0) (2026-11-17)
+
+
+### Features
+
+* TikTok Spark Ads codes, Threads ghost posts and Snapchat Business connect ([#5](https://github.com/bundleglobal/bundlesocial-n8n/issues/5)) ([5e6397f](https://github.com/bundleglobal/bundlesocial-n8n/commit/5e6397f2d686df8d0d558d5ce1a3f1924ff327e4))
+
 ## [1.2.1](https://github.com/bundleglobal/bundlesocial-n8n/compare/v1.2.0...v1.2.1) (2026-11-09)
 
 
