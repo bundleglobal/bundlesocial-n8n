@@ -221,6 +221,36 @@ describe('requests', () => {
 		assert.deepEqual(requests[0].body, { teamId: 't', postId: 'p' });
 	});
 
+	it('addresses a TikTok Spark Ads code by bundle.social post ID or TikTok item ID', async () => {
+		let { requests } = await run({
+			resource: 'tiktok',
+			operation: 'enableAdAuthorization',
+			teamId: 't',
+			additionalFields: { postId: 'p', authorizationDays: 60 },
+		});
+		assert.equal(requests[0].method, 'POST');
+		assert.equal(requests[0].url, 'https://api.bundle.social/api/v1/misc/tiktok/ad-authorization');
+		assert.deepEqual(requests[0].body, { teamId: 't', postId: 'p', authorizationDays: 60 });
+		({ requests } = await run({
+			resource: 'tiktok',
+			operation: 'getAdAuthorization',
+			teamId: 't',
+			options: { platformPostId: '7300000000000000000' },
+		}));
+		assert.equal(requests[0].method, 'GET');
+		assert.deepEqual(requests[0].qs, { teamId: 't', platformPostId: '7300000000000000000' });
+	});
+
+	it('sends the Threads ghost post flag', async () => {
+		const { requests } = await run({
+			resource: 'post',
+			operation: 'update',
+			id: 'p1',
+			dataThreads: { text: 'Gone tomorrow', isGhostPost: true },
+		});
+		assert.deepEqual(requests[0].body, { data: { THREADS: { text: 'Gone tomorrow', isGhostPost: true } } });
+	});
+
 	it('maps a body field named action without clashing with the operation selector', async () => {
 		const { requests } = await run({
 			resource: 'commentImport',
