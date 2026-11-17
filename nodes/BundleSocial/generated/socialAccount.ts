@@ -379,7 +379,7 @@ export const socialAccountProperties: INodeProperties[] = [
 			{
 				name: 'Set Channel',
 				value: 'setChannel',
-				description: 'Needed only for some social account types - Youtube, Instagram, Facebook and Linkedin',
+				description: 'Needed only for some social account types - Youtube, Instagram, Facebook, Linkedin, Google Business and Snapchat connected with the BUSINESS method',
 				action: 'Set channel for social account',
 			},
 			{
@@ -595,6 +595,23 @@ export const socialAccountProperties: INodeProperties[] = [
 				default: '',
 				placeholder: 'https://example.com',
 				description: 'Mastodon or Bluesky only. Required for Mastodon (the user\'s instance, e.g. https://mastodon.social). Optional for Bluesky - omit it to use the default issuer https://bsky.social, or pass a custom PDS/entryway issuer.',
+			},
+			{
+				displayName: 'Snapchat Connection Method',
+				name: 'snapchatConnectionMethod',
+				type: 'options',
+				options: [
+					{
+						name: 'Personal',
+						value: 'PERSONAL',
+					},
+					{
+						name: 'Business',
+						value: 'BUSINESS',
+					},
+				],
+				default: 'PERSONAL',
+				description: 'Snapchat only. PERSONAL (default) connects the login\'s own Public Profile. BUSINESS lists the Public Profiles of the login\'s Snap Business organizations; pick one with set-channel.',
 			},
 			{
 				displayName: 'TikTok Force Login',
@@ -819,6 +836,10 @@ export const socialAccountProperties: INodeProperties[] = [
 				value: 'LINKEDIN',
 			},
 			{
+				name: 'Snapchat',
+				value: 'SNAPCHAT',
+			},
+			{
 				name: 'YouTube',
 				value: 'YOUTUBE',
 			},
@@ -922,6 +943,10 @@ export const socialAccountProperties: INodeProperties[] = [
 			{
 				name: 'LinkedIn',
 				value: 'LINKEDIN',
+			},
+			{
+				name: 'Snapchat',
+				value: 'SNAPCHAT',
 			},
 			{
 				name: 'YouTube',
@@ -1029,6 +1054,10 @@ export const socialAccountProperties: INodeProperties[] = [
 			{
 				name: 'Slack',
 				value: 'SLACK',
+			},
+			{
+				name: 'Snapchat',
+				value: 'SNAPCHAT',
 			},
 			{
 				name: 'YouTube',
@@ -1327,6 +1356,10 @@ export const socialAccountProperties: INodeProperties[] = [
 						value: 'nl',
 					},
 					{
+						name: 'No',
+						value: 'no',
+					},
+					{
 						name: 'Pl',
 						value: 'pl',
 					},
@@ -1390,6 +1423,23 @@ export const socialAccountProperties: INodeProperties[] = [
 				name: 'showModalOnConnectSuccess',
 				type: 'boolean',
 				default: false,
+			},
+			{
+				displayName: 'Snapchat Connection Method',
+				name: 'snapchatConnectionMethod',
+				type: 'options',
+				options: [
+					{
+						name: 'Personal',
+						value: 'PERSONAL',
+					},
+					{
+						name: 'Business',
+						value: 'BUSINESS',
+					},
+				],
+				default: 'PERSONAL',
+				description: 'Snapchat only - connection method. When omitted, the portal lets the user choose.',
 			},
 			{
 				displayName: 'TikTok Force Login',
@@ -2099,7 +2149,7 @@ export const socialAccountProperties: INodeProperties[] = [
 				name: 'resetChannel',
 				type: 'boolean',
 				default: false,
-				description: 'Whether selected page will not be transferred automatically. The user will have to select the page themselves again. This only applies to Facebook, Instagram, Linkedin and Youtube.',
+				description: 'Whether selected page will not be transferred automatically. The user will have to select the page themselves again. This only applies to Facebook, Instagram, Linkedin, Youtube, Google Business and Snapchat connected with the BUSINESS method.',
 			},
 		],
 		default: {},

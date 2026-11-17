@@ -347,6 +347,19 @@ const BOOLEAN_DESCRIPTIONS = {
 	// The spec has the Duet and Stitch descriptions swapped.
 	disableDuet: 'Whether other TikTok users are prevented from making Duets with this post',
 	disableStitch: 'Whether other TikTok users are prevented from making Stitches with this post',
+	isGhostPost:
+		'Whether to publish a ghost post: a text-only post that is archived after 24 hours. Media, polls, GIFs, link attachments, topic tags, reply control, country restrictions and story cross-sharing are rejected with it.',
+};
+
+// Defaults the spec only states in prose. Keys are `<operationId>.<field>` or just `<field>`.
+const FIELD_DEFAULTS = {
+	authorizationDays: 30,
+};
+
+// Saved workflows omit a parameter equal to its default, so a resource's default operation must not move
+// when new operations sort in front of it.
+const OPERATION_DEFAULTS = {
+	tiktok: 'searchLocations',
 };
 
 const BRAND_WORDS = new Set(Object.values(BRANDS).flatMap((b) => b.split(' ')).concat(['Meta', 'Google']));
@@ -577,7 +590,9 @@ function buildField(key, rawSchema, ctx) {
 		case 'options': {
 			prop.type = 'options';
 			prop.options = enumOptions(s.enum);
-			prop.default = s.enum.includes(s.default) ? s.default : prop.options[0].value;
+			const fallback = FIELD_DEFAULTS[`${currentOperationId}.${key}`] ?? FIELD_DEFAULTS[key];
+			const preferredDefault = s.enum.includes(s.default) ? s.default : fallback;
+			prop.default = s.enum.includes(preferredDefault) ? preferredDefault : prop.options[0].value;
 			break;
 		}
 		case 'multiOptions': {
@@ -1179,7 +1194,9 @@ function writeResourceFile(resource, operations) {
 		operations.map((o) => o.option),
 		'name',
 	);
-	const preferred = ['create', 'getAll', 'get'].find((v) => operations.some((o) => o.value === v));
+	const preferred = [OPERATION_DEFAULTS[resource], 'create', 'getAll', 'get'].find((v) =>
+		operations.some((o) => o.value === v),
+	);
 	const operationProperty = {
 		displayName: 'Operation',
 		name: 'operation',

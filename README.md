@@ -61,7 +61,7 @@ The node can be attached to an AI Agent as a tool. On self-hosted n8n set `N8N_C
 
 <!-- operations:start -->
 
-197 operations across 27 resources, generated from the bundle.social OpenAPI spec.
+201 operations across 27 resources, generated from the bundle.social OpenAPI spec.
 
 <details>
 <summary><b>Analytics</b> (7)</summary>
@@ -410,11 +410,15 @@ The node can be attached to an AI Agent as a tool. On self-hosted n8n set `N8N_C
 </details>
 
 <details>
-<summary><b>TikTok</b> (4)</summary>
+<summary><b>TikTok</b> (8)</summary>
 
 | Operation | Endpoint |
 |---|---|
 | Delete Comment | `DELETE /api/v1/misc/tiktok/comment` |
+| Disable Ad Authorization | `DELETE /api/v1/misc/tiktok/ad-authorization` |
+| Enable Ad Authorization | `POST /api/v1/misc/tiktok/ad-authorization` |
+| Extend Ad Authorization | `POST /api/v1/misc/tiktok/ad-authorization/extend` |
+| Get Ad Authorization | `GET /api/v1/misc/tiktok/ad-authorization` |
 | Get Post Settings | `GET /api/v1/misc/tiktok/post-settings` |
 | Get Trending Commercial Music | `GET /api/v1/misc/tiktok/cml/trending-list` |
 | Search Locations | `GET /api/v1/misc/tiktok/locations` |

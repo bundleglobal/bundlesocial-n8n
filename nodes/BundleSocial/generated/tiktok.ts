@@ -69,6 +69,93 @@ export const tiktokOperations: Record<string, OperationSpec> = {
 			},
 		],
 	},
+	getAdAuthorization: {
+		method: 'GET',
+		path: '/api/v1/misc/tiktok/ad-authorization',
+		params: [
+			{
+				name: 'teamId',
+				in: 'query',
+				key: 'teamId',
+			},
+			{
+				name: 'options',
+				in: 'queryMerge',
+				shape: {
+					kind: 'object',
+				},
+			},
+		],
+	},
+	enableAdAuthorization: {
+		method: 'POST',
+		path: '/api/v1/misc/tiktok/ad-authorization',
+		params: [
+			{
+				name: 'jsonBody',
+				in: 'jsonBody',
+			},
+			{
+				name: 'teamId',
+				in: 'body',
+				key: 'teamId',
+			},
+			{
+				name: 'additionalFields',
+				in: 'bodyMerge',
+				shape: {
+					kind: 'object',
+				},
+			},
+		],
+		body: 'json',
+	},
+	disableAdAuthorization: {
+		method: 'DELETE',
+		path: '/api/v1/misc/tiktok/ad-authorization',
+		params: [
+			{
+				name: 'jsonBody',
+				in: 'jsonBody',
+			},
+			{
+				name: 'teamId',
+				in: 'body',
+				key: 'teamId',
+			},
+			{
+				name: 'additionalFields',
+				in: 'bodyMerge',
+				shape: {
+					kind: 'object',
+				},
+			},
+		],
+		body: 'json',
+	},
+	extendAdAuthorization: {
+		method: 'POST',
+		path: '/api/v1/misc/tiktok/ad-authorization/extend',
+		params: [
+			{
+				name: 'jsonBody',
+				in: 'jsonBody',
+			},
+			{
+				name: 'teamId',
+				in: 'body',
+				key: 'teamId',
+			},
+			{
+				name: 'additionalFields',
+				in: 'bodyMerge',
+				shape: {
+					kind: 'object',
+				},
+			},
+		],
+		body: 'json',
+	},
 };
 
 export const tiktokProperties: INodeProperties[] = [
@@ -84,10 +171,40 @@ export const tiktokProperties: INodeProperties[] = [
 		},
 		options: [
 			{
-				name: 'Search Locations',
-				value: 'searchLocations',
-				description: 'Searches location tags available to the connected TikTok account (up to 20 results)',
-				action: 'Search location tags',
+				name: 'Delete Comment',
+				value: 'deleteComment',
+				description: 'Delete a published TikTok comment',
+				action: 'Delete a comment',
+			},
+			{
+				name: 'Disable Ad Authorization',
+				value: 'disableAdAuthorization',
+				description: 'Turns off the "Ad authorization" setting of a TikTok post',
+				action: 'Disable ad authorization for a post',
+			},
+			{
+				name: 'Enable Ad Authorization',
+				value: 'enableAdAuthorization',
+				description: 'Turns on the "Ad authorization" setting of a public TikTok post and returns its Spark Ads authorization code',
+				action: 'Enable ad authorization and get a spark ads code',
+			},
+			{
+				name: 'Extend Ad Authorization',
+				value: 'extendAdAuthorization',
+				description: 'Adds days to the validity period of the post\'s Spark Ads code, or issues a new code if the previous one was deleted',
+				action: 'Extend the spark ads code of a post',
+			},
+			{
+				name: 'Get Ad Authorization',
+				value: 'getAdAuthorization',
+				description: 'Returns the current Spark Ads authorization code of a TikTok post with its validity window and status (NOT_USED, IN_USE, EXPIRED)',
+				action: 'Get the spark ads code of a post',
+			},
+			{
+				name: 'Get Post Settings',
+				value: 'getPostSettings',
+				description: 'Returns the privacy levels, interaction settings (comments, duet, stitch) and maximum video duration the connected TikTok account allows, read live from TikTok',
+				action: 'Get the posting options of an account',
 			},
 			{
 				name: 'Get Trending Commercial Music',
@@ -96,16 +213,10 @@ export const tiktokProperties: INodeProperties[] = [
 				action: 'Get popular tracks from commercial music library',
 			},
 			{
-				name: 'Delete Comment',
-				value: 'deleteComment',
-				description: 'Delete a published TikTok comment',
-				action: 'Delete a comment',
-			},
-			{
-				name: 'Get Post Settings',
-				value: 'getPostSettings',
-				description: 'Returns the privacy levels, interaction settings (comments, duet, stitch) and maximum video duration the connected TikTok account allows, read live from TikTok',
-				action: 'Get the posting options of an account',
+				name: 'Search Locations',
+				value: 'searchLocations',
+				description: 'Searches location tags available to the connected TikTok account (up to 20 results)',
+				action: 'Search location tags',
 			},
 		],
 		default: 'searchLocations',
@@ -457,5 +568,364 @@ export const tiktokProperties: INodeProperties[] = [
 		},
 		default: '',
 		description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+	},
+	{
+		displayName: 'Team Name or ID',
+		name: 'teamId',
+		type: 'options',
+		required: true,
+		typeOptions: {
+			loadOptionsMethod: 'getTeams',
+		},
+		displayOptions: {
+			show: {
+				resource: ['tiktok'],
+				operation: ['getAdAuthorization'],
+			},
+		},
+		default: '',
+		description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+	},
+	{
+		displayName: 'Options',
+		name: 'options',
+		type: 'collection',
+		displayOptions: {
+			show: {
+				resource: ['tiktok'],
+				operation: ['getAdAuthorization'],
+			},
+		},
+		options: [
+			{
+				displayName: 'Post ID',
+				name: 'postId',
+				type: 'string',
+				default: '',
+				description: 'The ID of a post in bundle.social published to TikTok. Pass this or <code>platformPostId</code>.',
+			},
+			{
+				displayName: 'Platform Post ID',
+				name: 'platformPostId',
+				type: 'string',
+				default: '',
+				description: 'The TikTok post ID (item_id) of a public post on the team\'s TikTok account, for posts published outside bundle.social. Pass this or <code>postId</code>.',
+			},
+		],
+		default: {},
+		placeholder: 'Add Option',
+	},
+	{
+		displayName: 'Specify Body',
+		name: 'bodyInput',
+		type: 'options',
+		displayOptions: {
+			show: {
+				resource: ['tiktok'],
+				operation: ['enableAdAuthorization'],
+			},
+		},
+		options: [
+			{
+				name: 'Using Fields Below',
+				value: 'fields',
+			},
+			{
+				name: 'Using JSON',
+				value: 'json',
+			},
+		],
+		default: 'fields',
+	},
+	{
+		displayName: 'JSON Body',
+		name: 'jsonBody',
+		type: 'json',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['tiktok'],
+				operation: ['enableAdAuthorization'],
+				bodyInput: ['json'],
+			},
+		},
+		default: '{}',
+		description: 'Full request body. See https://info.bundle.social/api-reference/introduction for the schema.',
+	},
+	{
+		displayName: 'Team Name or ID',
+		name: 'teamId',
+		type: 'options',
+		required: true,
+		typeOptions: {
+			loadOptionsMethod: 'getTeams',
+		},
+		displayOptions: {
+			show: {
+				resource: ['tiktok'],
+				operation: ['enableAdAuthorization'],
+				bodyInput: ['fields'],
+			},
+		},
+		default: '',
+		description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+	},
+	{
+		displayName: 'Additional Fields',
+		name: 'additionalFields',
+		type: 'collection',
+		displayOptions: {
+			show: {
+				resource: ['tiktok'],
+				operation: ['enableAdAuthorization'],
+				bodyInput: ['fields'],
+			},
+		},
+		options: [
+			{
+				displayName: 'Post ID',
+				name: 'postId',
+				type: 'string',
+				default: '',
+				description: 'The ID of a post in bundle.social published to TikTok. Pass this or <code>platformPostId</code>.',
+			},
+			{
+				displayName: 'Platform Post ID',
+				name: 'platformPostId',
+				type: 'string',
+				default: '',
+				description: 'The TikTok post ID (item_id) of a public post on the team\'s TikTok account, for posts published outside bundle.social. Pass this or <code>postId</code>.',
+			},
+			{
+				displayName: 'Authorization Days',
+				name: 'authorizationDays',
+				type: 'options',
+				options: [
+					{
+						name: '180',
+						value: 180,
+					},
+					{
+						name: '30',
+						value: 30,
+					},
+					{
+						name: '365',
+						value: 365,
+					},
+					{
+						name: '60',
+						value: 60,
+					},
+					{
+						name: '7',
+						value: 7,
+					},
+				],
+				default: 30,
+				description: 'How long the authorization code stays valid, in days: 7, 30, 60, 180 or 365. Default 30.',
+			},
+		],
+		default: {},
+		placeholder: 'Add Field',
+	},
+	{
+		displayName: 'Specify Body',
+		name: 'bodyInput',
+		type: 'options',
+		displayOptions: {
+			show: {
+				resource: ['tiktok'],
+				operation: ['disableAdAuthorization'],
+			},
+		},
+		options: [
+			{
+				name: 'Using Fields Below',
+				value: 'fields',
+			},
+			{
+				name: 'Using JSON',
+				value: 'json',
+			},
+		],
+		default: 'fields',
+	},
+	{
+		displayName: 'JSON Body',
+		name: 'jsonBody',
+		type: 'json',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['tiktok'],
+				operation: ['disableAdAuthorization'],
+				bodyInput: ['json'],
+			},
+		},
+		default: '{}',
+		description: 'Full request body. See https://info.bundle.social/api-reference/introduction for the schema.',
+	},
+	{
+		displayName: 'Team Name or ID',
+		name: 'teamId',
+		type: 'options',
+		required: true,
+		typeOptions: {
+			loadOptionsMethod: 'getTeams',
+		},
+		displayOptions: {
+			show: {
+				resource: ['tiktok'],
+				operation: ['disableAdAuthorization'],
+				bodyInput: ['fields'],
+			},
+		},
+		default: '',
+		description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+	},
+	{
+		displayName: 'Additional Fields',
+		name: 'additionalFields',
+		type: 'collection',
+		displayOptions: {
+			show: {
+				resource: ['tiktok'],
+				operation: ['disableAdAuthorization'],
+				bodyInput: ['fields'],
+			},
+		},
+		options: [
+			{
+				displayName: 'Post ID',
+				name: 'postId',
+				type: 'string',
+				default: '',
+				description: 'The ID of a post in bundle.social published to TikTok. Pass this or <code>platformPostId</code>.',
+			},
+			{
+				displayName: 'Platform Post ID',
+				name: 'platformPostId',
+				type: 'string',
+				default: '',
+				description: 'The TikTok post ID (item_id) of a public post on the team\'s TikTok account, for posts published outside bundle.social. Pass this or <code>postId</code>.',
+			},
+		],
+		default: {},
+		placeholder: 'Add Field',
+	},
+	{
+		displayName: 'Specify Body',
+		name: 'bodyInput',
+		type: 'options',
+		displayOptions: {
+			show: {
+				resource: ['tiktok'],
+				operation: ['extendAdAuthorization'],
+			},
+		},
+		options: [
+			{
+				name: 'Using Fields Below',
+				value: 'fields',
+			},
+			{
+				name: 'Using JSON',
+				value: 'json',
+			},
+		],
+		default: 'fields',
+	},
+	{
+		displayName: 'JSON Body',
+		name: 'jsonBody',
+		type: 'json',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['tiktok'],
+				operation: ['extendAdAuthorization'],
+				bodyInput: ['json'],
+			},
+		},
+		default: '{}',
+		description: 'Full request body. See https://info.bundle.social/api-reference/introduction for the schema.',
+	},
+	{
+		displayName: 'Team Name or ID',
+		name: 'teamId',
+		type: 'options',
+		required: true,
+		typeOptions: {
+			loadOptionsMethod: 'getTeams',
+		},
+		displayOptions: {
+			show: {
+				resource: ['tiktok'],
+				operation: ['extendAdAuthorization'],
+				bodyInput: ['fields'],
+			},
+		},
+		default: '',
+		description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+	},
+	{
+		displayName: 'Additional Fields',
+		name: 'additionalFields',
+		type: 'collection',
+		displayOptions: {
+			show: {
+				resource: ['tiktok'],
+				operation: ['extendAdAuthorization'],
+				bodyInput: ['fields'],
+			},
+		},
+		options: [
+			{
+				displayName: 'Post ID',
+				name: 'postId',
+				type: 'string',
+				default: '',
+				description: 'The ID of a post in bundle.social published to TikTok. Pass this or <code>platformPostId</code>.',
+			},
+			{
+				displayName: 'Platform Post ID',
+				name: 'platformPostId',
+				type: 'string',
+				default: '',
+				description: 'The TikTok post ID (item_id) of a public post on the team\'s TikTok account, for posts published outside bundle.social. Pass this or <code>postId</code>.',
+			},
+			{
+				displayName: 'Authorization Days',
+				name: 'authorizationDays',
+				type: 'options',
+				options: [
+					{
+						name: '180',
+						value: 180,
+					},
+					{
+						name: '30',
+						value: 30,
+					},
+					{
+						name: '365',
+						value: 365,
+					},
+					{
+						name: '60',
+						value: 60,
+					},
+					{
+						name: '7',
+						value: 7,
+					},
+				],
+				default: 30,
+				description: 'Days added to the current validity period (7, 30, 60, 180 or 365, default 30). If the code was deleted, the validity period of the new code.',
+			},
+		],
+		default: {},
+		placeholder: 'Add Field',
 	},
 ];

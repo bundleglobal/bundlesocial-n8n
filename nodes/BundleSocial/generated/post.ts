@@ -2092,6 +2092,13 @@ export const postProperties: INodeProperties[] = [
 				placeholder: 'Add Field',
 			},
 			{
+				displayName: 'Is Ghost Post',
+				name: 'isGhostPost',
+				type: 'boolean',
+				default: false,
+				description: 'Whether to publish a ghost post: a text-only post that is archived after 24 hours. Media, polls, GIFs, link attachments, topic tags, reply control, country restrictions and story cross-sharing are rejected with it.',
+			},
+			{
 				displayName: 'Link Attachment',
 				name: 'linkAttachment',
 				type: 'string',
@@ -4827,6 +4834,13 @@ export const postProperties: INodeProperties[] = [
 				],
 				default: {},
 				placeholder: 'Add Field',
+			},
+			{
+				displayName: 'Is Ghost Post',
+				name: 'isGhostPost',
+				type: 'boolean',
+				default: false,
+				description: 'Whether to publish a ghost post: a text-only post that is archived after 24 hours. Media, polls, GIFs, link attachments, topic tags, reply control, country restrictions and story cross-sharing are rejected with it.',
 			},
 			{
 				displayName: 'Link Attachment',
