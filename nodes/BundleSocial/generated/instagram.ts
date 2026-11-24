@@ -65,6 +65,27 @@ export const instagramOperations: Record<string, OperationSpec> = {
 			},
 		],
 	},
+	deletePost: {
+		method: 'DELETE',
+		path: '/api/v1/misc/instagram/post',
+		params: [
+			{
+				name: 'jsonBody',
+				in: 'jsonBody',
+			},
+			{
+				name: 'teamId',
+				in: 'body',
+				key: 'teamId',
+			},
+			{
+				name: 'postId',
+				in: 'body',
+				key: 'postId',
+			},
+		],
+		body: 'json',
+	},
 	deleteComment: {
 		method: 'DELETE',
 		path: '/api/v1/misc/instagram/comment',
@@ -101,16 +122,22 @@ export const instagramProperties: INodeProperties[] = [
 		},
 		options: [
 			{
+				name: 'Delete Comment',
+				value: 'deleteComment',
+				description: 'Permanently delete a published Instagram comment',
+				action: 'Delete an comment',
+			},
+			{
+				name: 'Delete Post',
+				value: 'deletePost',
+				description: 'Permanently delete a published Instagram post, reel, story or carousel',
+				action: 'Delete an post',
+			},
+			{
 				name: 'Discover Business Account',
 				value: 'discoverBusinessAccount',
 				description: 'Checks if an Instagram user exists and returns their public profile data',
 				action: 'Search for business or creator user by username',
-			},
-			{
-				name: 'Search Locations',
-				value: 'searchLocations',
-				description: 'Searches Facebook Pages with physical location data and returns IDs that can be used as data.INSTAGRAM.locationId',
-				action: 'Search location ids',
 			},
 			{
 				name: 'Search Audio',
@@ -119,13 +146,13 @@ export const instagramProperties: INodeProperties[] = [
 				action: 'Search audio assets',
 			},
 			{
-				name: 'Delete Comment',
-				value: 'deleteComment',
-				description: 'Permanently delete a published Instagram comment',
-				action: 'Delete an comment',
+				name: 'Search Locations',
+				value: 'searchLocations',
+				description: 'Searches Facebook Pages with physical location data and returns IDs that can be used as data.INSTAGRAM.locationId',
+				action: 'Search location ids',
 			},
 		],
-		default: 'discoverBusinessAccount',
+		default: 'deleteComment',
 	},
 	{
 		displayName: 'Team Name or ID',
@@ -277,6 +304,76 @@ export const instagramProperties: INodeProperties[] = [
 		],
 		default: {},
 		placeholder: 'Add Option',
+	},
+	{
+		displayName: 'Specify Body',
+		name: 'bodyInput',
+		type: 'options',
+		displayOptions: {
+			show: {
+				resource: ['instagram'],
+				operation: ['deletePost'],
+			},
+		},
+		options: [
+			{
+				name: 'Using Fields Below',
+				value: 'fields',
+			},
+			{
+				name: 'Using JSON',
+				value: 'json',
+			},
+		],
+		default: 'fields',
+	},
+	{
+		displayName: 'JSON Body',
+		name: 'jsonBody',
+		type: 'json',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['instagram'],
+				operation: ['deletePost'],
+				bodyInput: ['json'],
+			},
+		},
+		default: '{}',
+		description: 'Full request body. See https://info.bundle.social/api-reference/introduction for the schema.',
+	},
+	{
+		displayName: 'Team Name or ID',
+		name: 'teamId',
+		type: 'options',
+		required: true,
+		typeOptions: {
+			loadOptionsMethod: 'getTeams',
+		},
+		displayOptions: {
+			show: {
+				resource: ['instagram'],
+				operation: ['deletePost'],
+				bodyInput: ['fields'],
+			},
+		},
+		default: '',
+		description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+	},
+	{
+		displayName: 'Post ID',
+		name: 'postId',
+		type: 'string',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['instagram'],
+				operation: ['deletePost'],
+				bodyInput: ['fields'],
+			},
+		},
+		default: '',
+		description: 'The ID of the post in bundle.social',
 	},
 	{
 		displayName: 'Specify Body',
