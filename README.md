@@ -61,7 +61,7 @@ The node can be attached to an AI Agent as a tool. On self-hosted n8n set `N8N_C
 
 <!-- operations:start -->
 
-201 operations across 27 resources, generated from the bundle.social OpenAPI spec.
+202 operations across 27 resources, generated from the bundle.social OpenAPI spec.
 
 <details>
 <summary><b>Analytics</b> (7)</summary>
@@ -244,11 +244,12 @@ The node can be attached to an AI Agent as a tool. On self-hosted n8n set `N8N_C
 </details>
 
 <details>
-<summary><b>Instagram</b> (4)</summary>
+<summary><b>Instagram</b> (5)</summary>
 
 | Operation | Endpoint |
 |---|---|
 | Delete Comment | `DELETE /api/v1/misc/instagram/comment` |
+| Delete Post | `DELETE /api/v1/misc/instagram/post` |
 | Discover Business Account | `GET /api/v1/misc/instagram/tags` |
 | Search Audio | `GET /api/v1/misc/instagram/audio` |
 | Search Locations | `GET /api/v1/misc/instagram/locations` |
