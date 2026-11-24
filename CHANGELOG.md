@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/bundleglobal/bundlesocial-n8n/compare/v1.3.0...v1.4.0) (2026-11-24)
+
+
+### Features
+
+* Instagram post delete, YouTube embeddable and Snapchat history import ([#6](https://github.com/bundleglobal/bundlesocial-n8n/issues/6)) ([309df97](https://github.com/bundleglobal/bundlesocial-n8n/commit/309df97cd0a20917f5bddb8653440d32835de839))
+
 # [1.3.0](https://github.com/bundleglobal/bundlesocial-n8n/compare/v1.2.1...v1.3.0) (2026-11-17)
 
 
