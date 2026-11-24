@@ -2642,6 +2642,13 @@ export const postProperties: INodeProperties[] = [
 				default: '',
 			},
 			{
+				displayName: 'Embeddable',
+				name: 'embeddable',
+				type: 'boolean',
+				default: false,
+				description: 'Whether other websites can embed the video. When omitted, YouTube\'s own default applies.',
+			},
+			{
 				displayName: 'Has Paid Product Placement',
 				name: 'hasPaidProductPlacement',
 				type: 'boolean',
@@ -5387,6 +5394,13 @@ export const postProperties: INodeProperties[] = [
 				name: 'description',
 				type: 'string',
 				default: '',
+			},
+			{
+				displayName: 'Embeddable',
+				name: 'embeddable',
+				type: 'boolean',
+				default: false,
+				description: 'Whether other websites can embed the video. When omitted, YouTube\'s own default applies.',
 			},
 			{
 				displayName: 'Has Paid Product Placement',

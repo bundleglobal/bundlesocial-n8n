@@ -281,6 +281,10 @@ export const postHistoryImportProperties: INodeProperties[] = [
 				value: 'REDDIT',
 			},
 			{
+				name: 'Snapchat',
+				value: 'SNAPCHAT',
+			},
+			{
 				name: 'Threads',
 				value: 'THREADS',
 			},
@@ -453,6 +457,10 @@ export const postHistoryImportProperties: INodeProperties[] = [
 						value: 'REDDIT',
 					},
 					{
+						name: 'Snapchat',
+						value: 'SNAPCHAT',
+					},
+					{
 						name: 'Threads',
 						value: 'THREADS',
 					},
@@ -544,6 +552,10 @@ export const postHistoryImportProperties: INodeProperties[] = [
 			{
 				name: 'Reddit',
 				value: 'REDDIT',
+			},
+			{
+				name: 'Snapchat',
+				value: 'SNAPCHAT',
 			},
 			{
 				name: 'Threads',

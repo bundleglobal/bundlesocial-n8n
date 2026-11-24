@@ -389,7 +389,7 @@ export const youtubeProperties: INodeProperties[] = [
 			{
 				name: 'Edit Video',
 				value: 'editVideo',
-				description: 'Update the title, description, tags, category, or privacy status of a published YouTube video',
+				description: 'Update the title, description, tags, category, privacy status, or embedding setting of a published YouTube video',
 				action: 'Edit video metadata',
 			},
 			{
@@ -1154,6 +1154,13 @@ export const youtubeProperties: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				description: 'The updated video description',
+			},
+			{
+				displayName: 'Embeddable',
+				name: 'embeddable',
+				type: 'boolean',
+				default: false,
+				description: 'Whether other websites can embed the video',
 			},
 			{
 				displayName: 'Privacy Status',
